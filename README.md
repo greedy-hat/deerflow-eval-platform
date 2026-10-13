@@ -12,14 +12,20 @@
 - **agent-evaluation-framework（AEF）**：工具行为与确定性规则、历史回归、版本候选比较和发布门禁；只有许可证审核通过后才引入代码或运行于商业环境。
 - **本平台**：最薄的编排层、身份映射、业务 Gold、结果归一化、人工复核和发布决策；避免重做四个项目已有的功能。
 
+## 设计与实施的关系
+
+**最终架构一次性完整设计，工程按照模块依赖分步施工。** [完整目标设计](docs/MASTER_DESIGN.md) 从一开始包含 AEF、DeepEval、Skills Harness、发布门禁与平台治理；[分步实施清单](docs/DELIVERY_SEQUENCE.md) 只是交付顺序，不能理解为后续阶段才考虑 AEF。商业使用 AEF 仍须先取得相应授权。
+
 ## 文档导航
 
-1. [总体架构与边界](docs/ARCHITECTURE.md)
-2. [分阶段实现计划](docs/IMPLEMENTATION_PLAN.md)
-3. [数据契约、示例与适配器](docs/CONTRACTS.md)
-4. [评测指标与发布门禁](docs/METRICS_AND_GATES.md)
-5. [验收标准与风险](docs/ACCEPTANCE_AND_RISKS.md)
-6. [示例用例](examples/support_cases.jsonl)
+1. [完整目标设计（九模块 / 状态机 / 数据模型）](docs/MASTER_DESIGN.md)
+2. [分步实施任务（同一架构下逐批交付）](docs/DELIVERY_SEQUENCE.md)
+3. [总体架构与边界](docs/ARCHITECTURE.md)
+4. [原始详细实施任务参考](docs/IMPLEMENTATION_PLAN.md)
+5. [数据契约、示例与适配器](docs/CONTRACTS.md)
+6. [评测指标与发布门禁](docs/METRICS_AND_GATES.md)
+7. [验收标准与风险](docs/ACCEPTANCE_AND_RISKS.md)
+8. [示例用例](examples/support_cases.jsonl)
 
 ## 端到端目标
 
