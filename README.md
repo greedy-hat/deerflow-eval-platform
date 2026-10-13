@@ -1,24 +1,69 @@
-# DeerFlow Evaluation Platform
+# DeerFlow 2.0 Evaluation Platform（实施方案）
 
-Scenario-driven evaluation platform for mixed customer-support agents using DeerFlow. The target design is a complete shared platform; the current code is a fixture-only foundation.
+基于 **DeerFlow 2.0 + Langfuse + DeepEval + agent-evaluation-framework（受控引入）** 的客户技术支持 Agent 评测平台。
 
-## Evaluation domains
+> **状态：设计方案 / 尚未实现生产级集成。** 本仓库当前保存实现蓝图、接口契约和验收计划，不宣称已完成 DeerFlow、Langfuse、DeepEval 的端到端集成。
 
-- **Agent — Langfuse + DeepEval:** task/tool/response and multi-turn evaluation, with independent business-state and safety assertions.
-- **RAG — Langfuse + DeepEval:** retrieval, fixed-context generation and end-to-end evaluation, with source/citation provenance.
-- **Skills — dedicated Harness:** package, routing, loading, adherence, execution and independent outcome validation; shared reporting and optional semantic judging.
-- Shared versioned datasets, durable execution, isolation, access control, regression/release gates and Langfuse trace/experiment/score views.
+## 定位
 
-## Current fixture quickstart
+- **DeerFlow 2.0**：被测系统（Lead Agent、SubAgent、Skills、RAG、Tools）。
+- **Langfuse**：Trace/Span 可观测、Dataset/Experiment 管理、质量分数可视化。
+- **DeepEval**：最终回答质量、RAG 相关性/忠实性、语义评判与多轮能力评测。
+- **agent-evaluation-framework（AEF）**：工具行为与确定性规则、历史回归、版本候选比较和发布门禁；只有许可证审核通过后才引入代码或运行于商业环境。
+- **本平台**：最薄的编排层、身份映射、业务 Gold、结果归一化、人工复核和发布决策；避免重做四个项目已有的功能。
 
-```bash
-python -m pip install -e '.[dev]'
-pytest -q
-deer-eval run examples/hybrid_ticket.json
+## 文档导航
+
+1. [总体架构与边界](docs/ARCHITECTURE.md)
+2. [分阶段实现计划](docs/IMPLEMENTATION_PLAN.md)
+3. [数据契约、示例与适配器](docs/CONTRACTS.md)
+4. [评测指标与发布门禁](docs/METRICS_AND_GATES.md)
+5. [验收标准与风险](docs/ACCEPTANCE_AND_RISKS.md)
+6. [示例用例](examples/support_cases.jsonl)
+
+## 端到端目标
+
+```text
+Versioned Dataset / Gold
+          |
+          v
+Eval Orchestrator -> DeerFlow 2.0 (isolated test tenant)
+          |                  |
+          |                  v
+          |             Langfuse Trace + Spans
+          |                  |
+          +---- normalize <-+
+          |         |
+          +--> DeepEval (semantic/RAG)
+          +--> deterministic business checks
+          +--> AEF (behavior/regression/release, licensed + enabled)
+          |
+          +--> normalized results + review queue + evidence
+          +--> Langfuse Scores / Experiment
+          +--> CI gate (only verified hard assertions)
 ```
 
-**Current maturity:** Fixture-mode runnable foundation. Live DeerFlow/RAG targets, Langfuse, DeepEval, the dedicated Skills Harness and a web UI are NOT implemented or validated yet.
+**双向关联**：执行产生 Langfuse Trace；评测通过 `trace_id`/关联 ID 读取并将 Scores 写回。离线历史 Trace 评分不等同于针对新版本的 fresh-run 回归。
 
-**Target architecture:** React/TypeScript console, FastAPI backend, PostgreSQL metadata and durable jobs, S3-compatible evidence storage, separate execution/evaluation workers, and verified Agent/RAG adapters using Langfuse + DeepEval, alongside a dedicated Skills Harness. Full Skills, RAG, multi-turn, regression gates, access control and operations are one delivery scope. PostgreSQL owns published versions and decisions; Git is import/export and Langfuse is a projection. The design documents describe target behavior, not implemented capabilities.
+## 设计原则
 
-See [technical design](docs/TECHNICAL_DESIGN.md), [Skills evaluation design](docs/SKILLS_EVALUATION.md), [integration contract](docs/INTEGRATION.md) and [acceptance](docs/ACCEPTANCE.md). Do not run irreversible customer operations during evaluation.
+1. **可信发布**：未采集到必要 Trace、工具执行不完整、Evaluator 异常时标记 `INCONCLUSIVE`，不能按通过处理。
+2. **数据主权**：Gold 由业务方审核；Dataset/Experiment 优先使用 Langfuse；评测平台持久化运行状态、版本快照、审计和门禁决策。
+3. **隔离执行**：线上客服数据脱敏；写操作禁用或导向沙箱/模拟服务；禁止在评测环境触达真实退款、工单变更或生产配置修改。
+4. **可复现**：固定 DeerFlow 版本、Prompt/Skill/索引/模型版本、Dataset revision、Judge 配置和阈值。
+5. **受控引入 AEF**：在许可证审批之前，只实现自有适配器及确定性断言接口，不复制或安装其代码用于商业业务。
+
+## 首个可交付 POC
+
+`support-001`：用户询问技术产品接口报错原因。自动运行 DeerFlow；Langfuse 得到 Trace；DeepEval 评估最终回答与检索支撑；规则检查规定工具与禁用动作；将结果关联写回 Langfuse，并导出 Case 报告。如果没有 trace/评测不可用则结果为 `INCONCLUSIVE`。
+
+详见 [实施计划](docs/IMPLEMENTATION_PLAN.md) 与 [验收标准](docs/ACCEPTANCE_AND_RISKS.md)。
+
+## 来源 / 依赖
+
+- [DeerFlow](https://github.com/bytedance/deer-flow)
+- [Langfuse](https://langfuse.com/docs)
+- [DeepEval](https://docs.confident-ai.com/)
+- [Agent Evaluation Framework](https://github.com/Lin-chpin/agent-evaluation-framework) — **PolyForm Noncommercial，商业使用需另行授权**
+
+本仓库**不包含**任何上游 AEF 代码或其衍生文件。依赖版本和 API 在正式编码前须按实际部署的 release 锁定与核验。
