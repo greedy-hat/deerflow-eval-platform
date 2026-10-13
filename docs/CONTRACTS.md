@@ -131,7 +131,7 @@ def evaluate_case(case, snapshot):
 - 同一次 `run+case+attempt+metric+evaluator_version` 幂等；若 Langfuse API 不支持原生幂等，由平台自己的发送台账去重。
 - 不把 LLM judge 的不确定结论映射为确定性的高风险硬门禁。
 
-## 7. AEF 适配（有授权才启用）
+## 7. AEF 适配（个人非商业用途）
 
 AEF 的 `ProjectAdapter` 提供 `call_agent`、`read_trace`、`hard_gates` 和 `soft_quality`。Langfuse 的 NormalizedTrace v1 再映射到**已固定 AEF 版本**的 `agent_eval.NormalizedTrace`，不能假设两者字段/构造函数相同。单独做契约测试。
 

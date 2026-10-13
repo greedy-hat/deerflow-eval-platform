@@ -40,7 +40,7 @@
           Langfuse score writer + CI release gate + reviewer
 ```
 
-`*` AEF 仅在商业授权、隔离评估和兼容性验证后启用。禁用 AEF 时基础评测与规则引擎仍须可工作。
+`*` AEF 从首批作为正式评测插件接入（个人非商业使用）。禁用 AEF 时基础评测与规则引擎仍须可工作。
 
 **不要一开始就建设大型 Web 控制台。** P0 用 Python CLI + JSON 报告 + Langfuse UI；P1 引入持久任务/业务审核；P2 视人员使用情况再做 Web UI。
 

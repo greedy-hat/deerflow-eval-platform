@@ -1,6 +1,6 @@
 # DeerFlow 2.0 Evaluation Platform（实施方案）
 
-基于 **DeerFlow 2.0 + Langfuse + DeepEval + agent-evaluation-framework（受控引入）** 的客户技术支持 Agent 评测平台。
+基于 **DeerFlow 2.0 + Langfuse + DeepEval + agent-evaluation-framework（核心评测引擎）** 的客户技术支持 Agent 评测平台。
 
 > **状态：设计方案 / 尚未实现生产级集成。** 本仓库当前保存实现蓝图、接口契约和验收计划，不宣称已完成 DeerFlow、Langfuse、DeepEval 的端到端集成。
 
@@ -9,12 +9,12 @@
 - **DeerFlow 2.0**：被测系统（Lead Agent、SubAgent、Skills、RAG、Tools）。
 - **Langfuse**：Trace/Span 可观测、Dataset/Experiment 管理、质量分数可视化。
 - **DeepEval**：最终回答质量、RAG 相关性/忠实性、语义评判与多轮能力评测。
-- **agent-evaluation-framework（AEF）**：工具行为与确定性规则、历史回归、版本候选比较和发布门禁；只有许可证审核通过后才引入代码或运行于商业环境。
+- **agent-evaluation-framework（AEF）**：工具行为与确定性规则、历史回归、版本候选比较和发布门禁；个人非商业用途从首批正式接入。
 - **本平台**：最薄的编排层、身份映射、业务 Gold、结果归一化、人工复核和发布决策；避免重做四个项目已有的功能。
 
 ## 设计与实施的关系
 
-**最终架构一次性完整设计，工程按照模块依赖分步施工。** [完整目标设计](docs/MASTER_DESIGN.md) 从一开始包含 AEF、DeepEval、Skills Harness、发布门禁与平台治理；[分步实施清单](docs/DELIVERY_SEQUENCE.md) 只是交付顺序，不能理解为后续阶段才考虑 AEF。商业使用 AEF 仍须先取得相应授权。
+**最终架构一次性完整设计，工程按照模块依赖分步施工。** [完整目标设计](docs/MASTER_DESIGN.md) 从一开始包含 AEF、DeepEval、Skills Harness、发布门禁与平台治理；[分步实施清单](docs/DELIVERY_SEQUENCE.md) 只是交付顺序，不能理解为后续阶段才考虑 AEF。当前为个人非商业用途；用途变为商业时再评估授权。
 
 ## 文档导航
 
@@ -57,7 +57,7 @@ Eval Orchestrator -> DeerFlow 2.0 (isolated test tenant)
 2. **数据主权**：Gold 由业务方审核；Dataset/Experiment 优先使用 Langfuse；评测平台持久化运行状态、版本快照、审计和门禁决策。
 3. **隔离执行**：线上客服数据脱敏；写操作禁用或导向沙箱/模拟服务；禁止在评测环境触达真实退款、工单变更或生产配置修改。
 4. **可复现**：固定 DeerFlow 版本、Prompt/Skill/索引/模型版本、Dataset revision、Judge 配置和阈值。
-5. **受控引入 AEF**：在许可证审批之前，只实现自有适配器及确定性断言接口，不复制或安装其代码用于商业业务。
+5. **AEF 首批集成**：与 DeepEval 并列，从首批接入行为检查与统一数据契约；后续逐步实现回归和演化。
 
 ## 首个可交付 POC
 

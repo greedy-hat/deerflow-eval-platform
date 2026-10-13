@@ -7,7 +7,7 @@
 | P0 | 单条 DeerFlow 2.0 请求关联到 Langfuse trace + tool spans + final output |
 | P1 | 30–50 条真实/脱敏用例可执行；结果含 PASS/FAIL/INCONCLUSIVE；DeepEval 输出、规则结果及 Langfuse Scores 可关联 |
 | P2 | 数据/版本/Prompt/Skill/Judge/索引可追溯；历史回归与 holdout 独立；badcase 审核流程存在 |
-| P3 | AEF 获得商业许可后可通过 feature flag 启用；候选触犯禁用工具或回归集时 release 阻断 |
+| P3 | AEF 从首批作为正式插件接入并可通过 feature flag 控制；候选触犯禁用工具或回归集时 release 阻断 |
 | P4 | CI/审批/权限/审计、消息重试与恢复、脱敏与隔离验收通过 |
 
 ## 2. 必备自动测试
@@ -23,7 +23,7 @@
 
 | 风险 | 后果 | 控制措施 |
 |---|---|---|
-| AEF PolyForm Noncommercial 许可证 | 商用不合规 | 法务批准书面商用授权前禁用；不复制上游代码 |
+| AEF PolyForm Noncommercial 许可证 | 商用不合规 | 个人非商业使用遵守许可证；未来商用另行确认授权 |
 | DeerFlow 2.0 / Langfuse 版本差异 | Span 与 ID 对不上 | 锁定 Git SHA / SDK 版本，契约测试 + 显式 correlation mapping |
 | Trace 异步写入、部分缺失 | 误判工具未调用 | 有界等待 + `INCONCLUSIVE` + replay/重试 |
 | Judge 不稳定/偏见 | 误阻断、虚假提升 | 人工标定，多次评估，语义指标先 soft |
@@ -39,4 +39,4 @@
 
 ## 5. 未开始实施的事项
 
-本文仓库是**实施方案**而非可运行平台：没有部署环境、API token、真实 DeerFlow 2.0 endpoint、已批准 Gold、授权后的 AEF package。开始开发时先补齐这些输入；严禁凭示意 Schema 宣称已打通真实 API。
+本文仓库是**实施方案**而非可运行平台：没有部署环境、API token、真实 DeerFlow 2.0 endpoint、已批准 Gold、AEF package。开始开发时先补齐这些输入；严禁凭示意 Schema 宣称已打通真实 API。

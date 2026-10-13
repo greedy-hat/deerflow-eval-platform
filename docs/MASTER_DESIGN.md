@@ -8,7 +8,7 @@
 
 - 完整设计一次冻结：模块边界、领域对象、数据契约、运行状态机、API、DB schema、事件流、CI gate、权限和非功能要求。
 - 开发按纵向闭环切片：每批均落入终态架构，不搭建需要重写的“临时架构”。
-- AEF 与 DeepEval 并列在统一 Evaluation Engine 内；AEF **许可证为 PolyForm Noncommercial**，商用接入必须先获许可。未经授权，不安装/复制其代码用于商用生产；但提前固定 `AEFPort` 契约，独立自研规则引擎仍能运行。
+- AEF 与 DeepEval 并列在统一 Evaluation Engine 内；AEF 与 DeepEval 同级且首批正式接入；当前个人非商业使用，遵守 PolyForm Noncommercial 条款，若未来转商用则重新确认授权。
 - 不允许“评测通过”等于“可上线”：只有经审批的 Gold、完整 Trace、硬门禁和证据支持才可进入发布决策。
 
 ## 二、终态逻辑架构
@@ -112,4 +112,4 @@ CREATED -> VALIDATED -> QUEUED -> RUNNING -> COLLECTING_TRACE
 
 **设计完成**：以上九模块边界，schema/OpenAPI、状态机、策略接口、非功能约束、安全模型、部署图、验收用例均经过评审并版本冻结。
 
-**工程完成**：代码、单元/契约/集成/安全测试、真实 Trace/DeepEval/AEF（授权后）端到端证据、部署脚本和 CI gate 全部通过。两者绝不混称。
+**工程完成**：代码、单元/契约/集成/安全测试、真实 Trace/DeepEval/AEF 端到端证据、部署脚本和 CI gate 全部通过。两者绝不混称。

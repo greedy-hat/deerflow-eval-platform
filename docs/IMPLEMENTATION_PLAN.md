@@ -37,11 +37,11 @@
 
 **Exit**：重复执行同一 revision 可定位版本与证据；强制回归可阻断显著退化；人工待审核不被当作已确认失败或 Gold。
 
-## Phase 3 — AEF 受控集成（条件性）
+## AEF 高级能力扩展（基础行为评测在首批接入）
 
-**许可证门槛**：先取得商业授权或法务确认适用性；未获授权时采用平台自研行为规则 + 自研门禁，不复制其代码或生产调用。
+**使用范围**：当前个人非商业使用 AEF，保留 PolyForm Noncommercial 条款；未来转为商业用途需重新确认授权。
 
-授权后适配：`ProjectAdapter.call_agent(case, context)` 调用 DeerFlow；`read_trace(handle, case)` 从 Langfuse 转成 AEF 的 `NormalizedTrace`；`hard_gates` 负责可决定性的业务风险规则，`soft_quality` 负责告警。
+适配：`ProjectAdapter.call_agent(case, context)` 调用 DeerFlow；`read_trace(handle, case)` 从 Langfuse 转成 AEF 的 `NormalizedTrace`；`hard_gates` 负责可决定性的业务风险规则，`soft_quality` 负责告警。
 
 - 适配 `metadata.behavior_evaluators`：required/forbidden tools、call order/count、tool errors。
 - 发布流水线 `regression → smoke → full`（保护集失败即阻断）。
@@ -67,7 +67,7 @@ src/deerflow_eval/
     langfuse_trace.py
     langfuse_scores.py
     deepeval_runner.py
-    aef_adapter.py      # 授权后启用
+    aef_adapter.py      # 首批接入
   evaluators/
     business_rules.py
   orchestration/
@@ -94,6 +94,6 @@ tests/
 7. 一键 CLI 和报告。
 8. 脱敏、人工标注和 30–50 条 Gold 数据。
 9. 基线/候选实验、regression gate。
-10. AEF 授权评估及可选插件。
+10. AEF 适配与进阶版本回归功能。
 
 详见 [接口契约](CONTRACTS.md)、[指标和门禁](METRICS_AND_GATES.md)、[验收与风险](ACCEPTANCE_AND_RISKS.md)。
